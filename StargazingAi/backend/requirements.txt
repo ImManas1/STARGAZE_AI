@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+skyfield
+httpx
+python-dotenv
+requests

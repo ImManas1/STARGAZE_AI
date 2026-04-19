@@ -27,8 +27,7 @@ from typing import TypedDict, Optional, List
 # =========================================================
 
 class APIRequest(TypedDict):
-    lat:      float   # e.g. 52.3676
-    lon:      float   # e.g. 4.9041
+    city:str
     datetime: str     # ISO 8601 UTC  e.g. "2026-04-18T22:00:00Z"
     target:   str     # one of VALID_TARGETS
 

@@ -21,8 +21,7 @@
 // 1. API REQUEST CONTRACT  (Frontend → Backend)
 // =========================================================
 
-export const REQ_LAT      = "lat";
-export const REQ_LON      = "lon";
+export const REQ_CITY = "city"
 export const REQ_DATETIME = "datetime";   // ISO 8601 UTC  e.g. "2026-04-18T22:00:00Z"
 export const REQ_TARGET   = "target";     // one of VALID_TARGETS
 
@@ -60,7 +59,14 @@ export const CONDITION_GOOD     = "Good";
 export const CONDITION_MODERATE = "Moderate";
 export const CONDITION_POOR     = "Poor";
 
-export const CONDITIONS = [CONDITION_GOOD, CONDITION_MODERATE, CONDITION_POOR];
+export const CONDITION_EXCELLENT = "Excellent";
+
+export const CONDITIONS = [
+  CONDITION_EXCELLENT,
+  CONDITION_GOOD,
+  CONDITION_MODERATE,
+  CONDITION_POOR
+];
 
 
 // =========================================================
@@ -79,12 +85,11 @@ export const CONFIDENCE_LEVELS = [CONFIDENCE_HIGH, CONFIDENCE_MEDIUM, CONFIDENCE
 //    Use in api.js. Guarantees the request always matches Contract A.
 // =========================================================
 
-export function buildRequest(lat, lon, datetime, target) {
+export function buildRequest(city, datetime, target) {
   return {
-    [REQ_LAT]:      lat,
-    [REQ_LON]:      lon,
+    [REQ_CITY]:city,
     [REQ_DATETIME]: datetime,   // pass new Date().toISOString() for current time
-    [REQ_TARGET]:   target,
+    [REQ_TARGET]:   target.toLowerCase(),
   };
 }
 

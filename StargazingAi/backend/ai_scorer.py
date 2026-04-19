@@ -2,10 +2,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-from openai import OpenAI
+from google import genai
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Configure API
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+
+# Load model
+MODEL="gemini-3.1-flash-lite-preview"
 
 # -------------------------
 # MAIN AI FUNCTION
@@ -13,67 +17,45 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def call_ai(data: dict) -> str:
     try:
+        print("CALLING NEW GEMINI...")
+
         prompt = f"""
-You are an astronomy assistant.
+Explain stargazing conditions in 2–3 natural, user-friendly sentences using the provided data.
 
-Explain stargazing conditions clearly using ONLY the given data.
+Guidelines:
+- Stay accurate to the values (do not exaggerate)
+- Do NOT just list data — interpret it
+- Explain what the conditions mean for visibility
+- You may simplify technical terms (e.g., Bortle class → light pollution level)
+- End with a clear recommendation
 
-Score: {data['score']}
-Condition: {data['condition']}
-Cloud cover: {data['cloud_cover']}%
-Humidity: {data['humidity']}%
-Moon illumination: {data['moon_illumination']}%
-Altitude: {data['altitude_deg']} degrees
-Bortle class: {data['bortle_class']}
-Best window: {data['best_window']}
-
-Rules:
-- Keep it 2–3 sentences
-- Do not calculate anything
-- Do not change values
-- Be simple and factual
+Score: {data.get('score')}
+Condition: {data.get('condition')}
+Cloud cover: {data.get('cloud_cover')}%
+Humidity: {data.get('humidity')}%
+Moon illumination: {data.get('moon_illumination')}%
+Altitude: {data.get('altitude_deg')} degrees
+Bortle class: {data.get('bortle_class')}
+Best window: {data.get('best_window')}
 """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.2
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
         )
 
-        return response.choices[0].message.content.strip()
+        print("RAW:", response)
 
-    except Exception:
+        return response.text.strip()
+
+    except Exception as e:
+        print("AI ERROR:", e)
         return fallback_reason(data)
 
-
-# -------------------------
-# FALLBACK (NO AI NEEDED)
-# -------------------------
 
 def fallback_reason(data: dict) -> str:
     return (
         f"{data['condition']} stargazing conditions with "
         f"{data['cloud_cover']}% cloud cover, "
-        f"{data['humidity']}% humidity, and "
-        f"{data['altitude_deg']}° altitude. "
-        "Visibility depends mainly on sky clarity and moonlight."
+        f"{data['humidity']}% humidity."
     )
-
-
-# -------------------------
-# MOCK TEST (RUN WITHOUT BACKEND)
-# -------------------------
-
-if __name__ == "__main__":
-    mock_data = {
-        "score": 78,
-        "condition": "Good",
-        "cloud_cover": 20,
-        "humidity": 50,
-        "moon_illumination": 30,
-        "altitude_deg": 42,
-        "bortle_class": 5,
-        "best_window": "22:00-01:00"
-    }
-
-    print(call_ai(mock_data))
