@@ -22,12 +22,25 @@ def call_ai(data: dict) -> str:
         prompt = f"""
 Explain stargazing conditions in 2–3 natural, user-friendly sentences using the provided data.
 
+IMPORTANT RULES:
+
+- Overall condition MUST match the score.
+- If score is low/moderate due to light pollution, DO NOT describe conditions as "excellent" or "clear".
+- Always prioritize BORTLE CLASS over cloud/humidity.
+- Even with clear skies, high light pollution reduces visibility significantly.
+
 Guidelines:
 - Stay accurate to the values (do not exaggerate)
 - Do NOT just list data — interpret it
 - Explain what the conditions mean for visibility
 - You may simplify technical terms (e.g., Bortle class → light pollution level)
 - End with a clear recommendation
+
+Rules:
+- Your explanation MUST align with the condition.
+- High Bortle class (7–9) = poor visibility even if skies are clear.
+- Do NOT call conditions "excellent" if score is moderate or low.
+- Focus on visibility of celestial objects, not just sky clarity.
 
 Score: {data.get('score')}
 Condition: {data.get('condition')}

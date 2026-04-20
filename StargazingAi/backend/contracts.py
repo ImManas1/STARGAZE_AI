@@ -28,7 +28,7 @@ from typing import TypedDict, Optional, List
 
 class APIRequest(TypedDict):
     city:str
-    datetime: str     # ISO 8601 UTC  e.g. "2026-04-18T22:00:00Z"
+    datetime:  Optional[str] = None     # ISO 8601 UTC  e.g. "2026-04-18T22:00:00Z"
     target:   str     # one of VALID_TARGETS
 
 VALID_TARGETS = ["moon", "mars", "jupiter", "saturn"]

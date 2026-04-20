@@ -11,7 +11,7 @@ FALLBACK_CITIES={
     "bangalore": (12.9716, 77.5946),
 }
 
-async def city_to_latlon(city:str)->tuple[float,float]:
+async def city_to_latlon(city:str)->dict:
     try:
         async with httpx.AsyncClient() as client:
             r=await client.get(
